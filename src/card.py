@@ -32,6 +32,9 @@ class Card:
 			return True
 		else:
 			return MRC.color == self.color or MRC.value == self.value
+			
+	def printCard(self):
+		return self.color + " " + self.value
 		
 class Discard:
 	def __init__(self):

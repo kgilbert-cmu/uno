@@ -5,25 +5,48 @@ Color_values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', "+2", "Skip"]
 Black_values = ['W', "+4"]
 All_values = Color_values + Black_values
 
+class CardError(Exception):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+         return repr(self.value)
+
 class Card:
 	def __init__(self, color, value):
-		self.color = color
-		self.value = value
-		
-	def color(self):
-		return self.color
-		
-	def value(self):
-		return self.value
-		
+		if color in colors:
+			self.color = color
+		else:
+			print "Invalid color"
+			raise CardError
+		if color == "Black":
+			if value in Black_values:
+				self.value = value
+		elif value in Color_values:
+				self.value = value
+		else:
+			print "Invalid value"
+			raise CardError
+			
 	def playable(self, MRC): # most-recent card
 		if self.color == "Black":
 			return True
 		else:
-			return MRC.color() == self.color or MRC.value() == self.value()
+			return MRC.color == self.color or MRC.value == self.value
 		
-class Deck:
-	def __init__(self, size):
+class Discard:
+	def __init__(self):
+		self.pile = []
+		
+	def add(self, card):
+		self.pile.append(card)
+			
+	def restart(self):
+		tmp = random.shuffle(self.pile)
+		self.pile = []
+		return tmp
+			
+class Deck:	
+	def __init__(self, size=52):
 		self.deck = []
 		for x in xrange(0, size):
 			c = random.choice(colors)
@@ -32,21 +55,17 @@ class Deck:
 			else:
 				v = random.choice(Color_values)
 			self.deck.append(Card(c,v))
+		self.discard = Discard()
 			
-	def draw(self, num):
+	def remaining(self):
+		return len(self.deck)
+		
+	def draw(self, num=1):
 		ret = []
-		for x in xrange(0, num):
+		while num > 0:
+			if self.remaining() == 0:
+				print "Restart deck..."
+				self.deck = discard.restart()
 			ret.append(self.deck.pop())
+			num = num - 1
 		return ret
-		
-class Discard:
-	def __init__(self):
-		self.pile = []
-	
-	def add(self, card):
-		self.pile.append(card)
-		
-	def restart(self):
-		tmp = random.shuffle(self.pile)
-		self.pile = []
-		return tmp

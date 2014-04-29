@@ -9,8 +9,10 @@ def finish(hands):
 	for (x,s) in results:
 		if s == 0:
 			print "Player %i won." % x
+		elif s== 1:
+			print "Player %i had 1 card left." % x
 		else:
-			print "Player %i had %i cards left." % (x,s)
+			print "Player %i had %i card left." % (x,s)
 
 def gameOver(hands):
 	if 0 in map(len, hands):
@@ -33,6 +35,7 @@ def main(humans=1, computers=3, firstHand=7):
 		[MRC] = deck.draw(1)
 	turn = 0
 	step = 1
+	count_turns = 0
 	while not gameOver(game):
 		# for i in xrange(0, len(game)):
 			# if len(game[i]) == 1:
@@ -121,9 +124,10 @@ def main(humans=1, computers=3, firstHand=7):
 				step = step * -1
 				print "Reversed! It is now Player %i's turn." % ((turn + step) % players + 1)
 			turn = (turn + step) % players
+			count_turns = count_turns + 1
 		else:
 			print "\n \nThat card can't be played now. \n"
-	print "\nGame over."
+	print "\nGame over after %i turns." % count_turns
 	print ""
 	finish(game)
 	

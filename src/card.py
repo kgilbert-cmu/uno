@@ -41,7 +41,8 @@ class Discard:
 		self.pile.append(card)
 			
 	def restart(self):
-		tmp = random.shuffle(self.pile)
+		random.shuffle(self.pile)
+		tmp = self.pile
 		self.pile = []
 		return tmp
 			
@@ -65,7 +66,8 @@ class Deck:
 		while num > 0:
 			if self.remaining() == 0:
 				print "Restart deck..."
-				self.deck = discard.restart()
+				print len(self.discard.pile)
+				self.deck = self.discard.restart()
 			ret.append(self.deck.pop())
 			num = num - 1
 		return ret

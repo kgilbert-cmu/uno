@@ -16,7 +16,7 @@ def printHand(cards, top_card):
 		playable = "\t<---" if cards[i].playable(top_card) else ""
 		print "(%s)" % i, cards[i].color, cards[i].value, playable
 		
-def main(players=2, firstHand=5):
+def main(players=2, firstHand=8):
 	deck = card.Deck(52)
 	game = deck.deal(players, firstHand)
 	[MRC] = deck.draw(1)

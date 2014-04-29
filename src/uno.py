@@ -1,4 +1,5 @@
 import card
+import string
 
 def gameOver(hands):
 	if 1 in map(len, hands):
@@ -28,7 +29,10 @@ def main(players=2, firstHand=5):
 		if play in ["draw", "Draw", "DRAW", "d", "D"]:
 			game[0].extend(deck.draw())
 			continue
-		play = int(play)
+		if play.isdigit():
+			play = int(play)
+		else:
+			continue
 		if not play < len(game[0]):
 			print "\n \nThat was NOT a card in your hand. Please select again. \n \n"
 			continue
@@ -37,7 +41,12 @@ def main(players=2, firstHand=5):
 			deck.discard.add(game[0][play])
 			game[0] = game[0][:play] + game[0][play+1:]
 			if MRC.color == "Black":
-				MRC.color = raw_input("Black means wild card! What color do you want?")
+				wild_card_message = "Black means wild card! What color do you want?  "
+				invalid_choice_message = "You can pick Red, Blue, Green, or Yellow.  "
+				inp = string.capwords(raw_input(wild_card_message))
+				while not inp in card.colors or inp == "Black":
+					inp = string.capwords(raw_input(invalid_choice_message))
+				MRC.color = inp
 			if MRC.value in ["+4", "+2"]:
 				print "Draw!"
 			if MRC.value == "Skip":

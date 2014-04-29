@@ -12,7 +12,7 @@ def finish(hands):
 		elif s== 1:
 			print "Player %i had 1 card left." % x
 		else:
-			print "Player %i had %i card left." % (x,s)
+			print "Player %i had %i cards left." % (x,s)
 
 def gameOver(hands):
 	if 0 in map(len, hands):

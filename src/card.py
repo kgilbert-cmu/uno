@@ -38,6 +38,8 @@ class Discard:
 		self.pile = []
 		
 	def add(self, card):
+		if card.value == "W":
+			card.color = "Black"
 		self.pile.append(card)
 			
 	def restart(self):

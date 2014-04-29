@@ -69,3 +69,14 @@ class Deck:
 			ret.append(self.deck.pop())
 			num = num - 1
 		return ret
+		
+	def deal(self, num, size):
+		ret = []
+		for x in xrange(0, num):
+			ret.append([])
+		while size > 0:
+			for i in xrange(0,num):
+				[tmp] = self.draw()
+				ret[i].append(tmp)
+			size = size - 1
+		return ret

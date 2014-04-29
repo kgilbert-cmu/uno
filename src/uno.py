@@ -1,6 +1,7 @@
 import card
 import string
 import random
+import copy
 
 def gameOver(hands):
 	if 1 in map(len, hands):
@@ -60,7 +61,7 @@ def main(humans=1, computers=3, firstHand=8):
 			continue
 		if game[turn][play].playable(MRC):
 			MRC = game[turn][play]
-			deck.discard.add(game[turn][play])
+			deck.discard.add(copy.deepcopy(game[turn][play]))
 			game[turn] = game[turn][:play] + game[turn][play+1:]
 			if MRC.color == "Black":
 				if gameOver(game):
@@ -82,9 +83,8 @@ def main(humans=1, computers=3, firstHand=8):
 					game[poor_sap].extend(deck.draw(4))
 				else:
 					game[poor_sap].extend(deck.draw(2))
-				MRC.value = "Skip"
-			if MRC.value == "Skip":
-				print "\n Player %i got skipped!" % ((turn + step + 1) % players)
+			if MRC.value == "Skip" or MRC.value == "+4":
+				print "\n Player %i got skipped!" % ((turn + step + 1) % (players + 1))
 				turn = (turn + step*2) % players
 				continue
 			if MRC.value == "Reverse":

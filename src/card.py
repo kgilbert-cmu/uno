@@ -52,15 +52,18 @@ class Discard:
 		return tmp
 			
 class Deck:	
+	def randomCard(self):
+		c = random.choice(colors)
+		if c == "Black":
+			v = random.choice(Black_values)
+		else:
+			v = random.choice(Color_values)
+		return Card(c,v)
+		
 	def __init__(self, size=52):
 		self.deck = []
 		for x in xrange(0, size):
-			c = random.choice(colors)
-			if c == "Black":
-				v = random.choice(Black_values)
-			else:
-				v = random.choice(Color_values)
-			self.deck.append(Card(c,v))
+			self.deck.append(self.randomCard())
 		self.discard = Discard()
 			
 	def remaining(self):
@@ -69,10 +72,14 @@ class Deck:
 	def draw(self, num=1):
 		ret = []
 		while num > 0:
-			if self.remaining() == 0:
+			if self.remaining() == 0 and len(self.discard.pile) > 0:
 				print "Restart deck..."
-				print len(self.discard.pile)
 				self.deck = self.discard.restart()
+			elif self.remaining() == 0 and len(self.discard.pile) == 0:
+				print "New card created..."
+				ret.append(self.randomCard())
+				num = num - 1
+				continue
 			ret.append(self.deck.pop())
 			num = num - 1
 		return ret

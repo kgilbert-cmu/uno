@@ -1,7 +1,8 @@
 import random
+import itertools
 
-colors = ["Red", "Yellow", "Blue", "Green", "Black"]
-Color_values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', "+2", "Skip", "Reverse"]
+colors = ["Red", "Yellow", "Blue", "Green"]
+Color_values = ['1', '2', '3', '4', '5', '6', '7', '8', '9', "+2", "Skip", "Reverse"]
 Black_values = ['W', "+4"]
 All_values = Color_values + Black_values
 
@@ -13,7 +14,7 @@ class CardError(Exception):
 
 class Card:
 	def __init__(self, color, value):
-		if color in colors:
+		if color in colors or color == "Black":
 			self.color = color
 		else:
 			print "Invalid color"
@@ -21,7 +22,7 @@ class Card:
 		if color == "Black":
 			if value in Black_values:
 				self.value = value
-		elif value in Color_values:
+		elif value in Color_values or value == '0':
 				self.value = value
 		else:
 			print "Invalid value"
@@ -60,10 +61,23 @@ class Deck:
 			v = random.choice(Color_values)
 		return Card(c,v)
 		
-	def __init__(self, size=52):
+	def __init__(self, size=108):
 		self.deck = []
-		for x in xrange(0, size):
-			self.deck.append(self.randomCard())
+		if size != 108:
+			for x in xrange(0, size):
+				self.deck.append(self.randomCard())
+		else:
+			ranks = itertools.product(colors, Color_values)
+			zeroes = itertools.product(colors, '0')
+			wilds = zip(["Black"]*8, ['W']*4 + ["+4"]*4)
+			for (c,v) in ranks:
+				self.deck.append(Card(c,v))
+				self.deck.append(Card(c,v))
+			for (c,v) in zeroes:
+				self.deck.append(Card(c,v))
+			for (c,v) in wilds:
+				self.deck.append(Card(c,v))
+			random.shuffle(self.deck)
 		self.discard = Discard()
 			
 	def remaining(self):

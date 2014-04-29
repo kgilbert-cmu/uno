@@ -3,10 +3,16 @@ import string
 import random
 import copy
 
+def finish(hands):
+	scores = map(len, hands)
+	results = sorted(zip(range(1, len(scores)+1), scores), key=lambda (p,scores): scores)
+	for (x,s) in results:
+		if s == 0:
+			print "Player %i won." % x
+		else:
+			print "Player %i had %i cards left." % (x,s)
+
 def gameOver(hands):
-	if 1 in map(len, hands):
-		#print "\n Someone has UNO"
-		_ = 1
 	if 0 in map(len, hands):
 		return True
 	else:
@@ -18,16 +24,19 @@ def printHand(cards, top_card):
 		playable = "\t<---" if cards[i].playable(top_card) else ""
 		print "(%s)" % i, cards[i].color, cards[i].value, playable
 		
-def main(humans=1, computers=3, firstHand=8):
+def main(humans=1, computers=3, firstHand=7):
 	players = humans + computers
-	deck = card.Deck(52)
+	deck = card.Deck()
 	game = deck.deal(players, firstHand)
-	[MRC] = deck.draw(1)
+	[MRC] = deck.draw()
 	while MRC.color == "Black":
 		[MRC] = deck.draw(1)
 	turn = 0
 	step = 1
 	while not gameOver(game):
+		# for i in xrange(0, len(game)):
+			# if len(game[i]) == 1:
+				# print "Player %i has UNO" % (i + 1)
 		print "\nIt is Player %i's turn and Player %i is next." % ((turn + 1), ((turn + step) % players + 1))
 		print "\n The top of the deck is: ", MRC.color, MRC.value
 		if turn >= humans:
@@ -41,15 +50,30 @@ def main(humans=1, computers=3, firstHand=8):
 		else:
 			printHand(game[turn], MRC)
 			play = raw_input("\nType a number to select a card, or 'D' to draw. Which card will you play?  ")
+		if play == "help":
+			print "\nThe game supports quit, help, auto, draw, ?, next, and card indices."
+			continue
 		if play in ["quit", "Quit", "QUIT", "q", "Q"]:
 			return None
-		if play in ["draw", "Draw", "DRAW", "d", "D"]:
+		if play == "auto":
+			humans = 0
+			computers = computers + 1
+		if play == 'd':
 			game[turn].extend(deck.draw())
+			continue
+		if play == "draw":
+			if len(game[turn]) == 1:
+				print "Player %i had to draw cards." % (turn + 1)
+			while True not in [c.playable(MRC) for c in game[turn]]:
+				game[turn].extend(deck.draw())
 			continue
 		if play == "?":
 			for i in xrange(0, players):
-				print "Player %i has %s cards remaining." % (i+1, len(game[i]))
-		if play in ["next"]:
+				if len(game[i]) > 1:
+					print "Player %i has %s cards remaining." % (i+1, len(game[i]))
+				else:
+					print "Player %i has UNO." % (i+1)
+		if play == "next":
 			print "\n Player %i is next" % ((turn + step) % players + 1)
 			continue
 		if play.isdigit():
@@ -79,7 +103,7 @@ def main(humans=1, computers=3, firstHand=8):
 			if MRC.value in ["+4", "+2"]:
 				if gameOver(game):
 					continue
-				print "Draw!"
+				print "Player %i must draw!" % ((turn + step) % players + 1)
 				poor_sap = (turn + step) % players
 				if "4" in MRC.value:
 					game[poor_sap].extend(deck.draw(4))
@@ -99,7 +123,9 @@ def main(humans=1, computers=3, firstHand=8):
 			turn = (turn + step) % players
 		else:
 			print "\n \nThat card can't be played now. \n"
-	print "Game over."
+	print "\nGame over."
+	print ""
+	finish(game)
 	
 if __name__ == "__main__":
     main(1,3)

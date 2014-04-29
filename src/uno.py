@@ -27,8 +27,8 @@ def main(humans=1, computers=3, firstHand=8):
 	turn = 0
 	step = 1
 	while not gameOver(game):
-		print "\n The top of the deck is: ", MRC.color, MRC.value
 		print "\nIt is Player %i's turn." % (turn + 1)
+		print "\n The top of the deck is: ", MRC.color, MRC.value
 		if turn >= humans:
 			plays = zip(range(len(game[turn])), [c.playable(MRC) for c in game[turn]])
 			plays = [i for (i, tf) in plays if tf]
@@ -36,6 +36,7 @@ def main(humans=1, computers=3, firstHand=8):
 				play = 'draw'
 			else:
 				play = str(random.choice(plays))
+				print " Player %i plays %s" % (turn + 1, game[turn][int(play)].printCard())
 		else:
 			printHand(game[turn], MRC)
 			play = raw_input("\nType a number to select a card, or 'D' to draw. Which card will you play?  ")

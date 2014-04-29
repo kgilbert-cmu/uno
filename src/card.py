@@ -1,7 +1,7 @@
 import random
 
 colors = ["Red", "Yellow", "Blue", "Green", "Black"]
-Color_values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', "+2", "Skip"]
+Color_values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', "+2", "Skip", "Reverse"]
 Black_values = ['W', "+4"]
 All_values = Color_values + Black_values
 

@@ -28,7 +28,7 @@ def main(humans=1, computers=3, firstHand=8):
 	turn = 0
 	step = 1
 	while not gameOver(game):
-		print "\nIt is Player %i's turn." % (turn + 1)
+		print "\nIt is Player %i's turn and Player %i is next." % ((turn + 1), ((turn + step) % players + 1))
 		print "\n The top of the deck is: ", MRC.color, MRC.value
 		if turn >= humans:
 			plays = zip(range(len(game[turn])), [c.playable(MRC) for c in game[turn]])
@@ -50,7 +50,7 @@ def main(humans=1, computers=3, firstHand=8):
 			for i in xrange(0, players):
 				print "Player %i has %s cards remaining." % (i+1, len(game[i]))
 		if play in ["next"]:
-			print "\n Player %i is next" % ((turn + step*2) % players)
+			print "\n Player %i is next" % ((turn + step) % players + 1)
 			continue
 		if play.isdigit():
 			play = int(play)
@@ -77,6 +77,8 @@ def main(humans=1, computers=3, firstHand=8):
 						inp = string.capwords(raw_input(invalid_choice_message))
 				MRC.color = inp
 			if MRC.value in ["+4", "+2"]:
+				if gameOver(game):
+					continue
 				print "Draw!"
 				poor_sap = (turn + step) % players
 				if "4" in MRC.value:
@@ -84,12 +86,16 @@ def main(humans=1, computers=3, firstHand=8):
 				else:
 					game[poor_sap].extend(deck.draw(2))
 			if MRC.value == "Skip" or MRC.value == "+4":
-				print "\n Player %i got skipped!" % ((turn + step + 1) % (players + 1))
+				if gameOver(game):
+					continue
+				print "\n Player %i got skipped!" % ((turn + step) % players + 1)
 				turn = (turn + step*2) % players
 				continue
 			if MRC.value == "Reverse":
-				print "Reversed!"
+				if gameOver(game):
+					continue
 				step = step * -1
+				print "Reversed! It is now Player %i's turn." % ((turn + step) % players + 1)
 			turn = (turn + step) % players
 		else:
 			print "\n \nThat card can't be played now. \n"
